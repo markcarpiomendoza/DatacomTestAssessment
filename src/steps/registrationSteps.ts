@@ -25,23 +25,61 @@ await this.registrationPage?.clickRegisterButton()
 });
 
 
-Then ('Failed registration message is visible', async function (this: PageObjects) {
+Then ('Failed registration message should be visible', async function (this: PageObjects) {
     await this.registrationPage?.verifyFailedRegistrationMessage()
 });
 
-Then ('Successful registration message is visible', async function (this: PageObjects) {
+Then ('Successful registration message should be visible', async function (this: PageObjects) {
     await this.registrationPage?.verifySuccessfulRegistrationMessage()
 });
 
 When('I enter valid registration details with {string}, {string}, {string}, {string}, {string}, {string}', 
 async function (this: PageObjects, firstName: string, lastName: string, phoneNumber: string, country: string, email: string, password: string) {
-    await this.registrationPage?.fillupRegistrationForm(firstName, lastName, phoneNumber, country, email, password);
+ const registrationData ={
+    firstName: firstName,
+    lastName: lastName,
+    phoneNumber: phoneNumber,
+    country: country,
+    email: email,
+    password: password
+    }
+
+     await this.registrationPage?.fillupRegistrationForm(registrationData);
+    
 });
 
 When('I enter invalid registration details with {string}, {string}, {string}, {string}, {string}, {string}', 
 async function (this: PageObjects, firstName: string, lastName: string, phoneNumber: string, country: string, email: string, password: string) {
-     await this.registrationPage?.fillupRegistrationForm(firstName, lastName, phoneNumber, country, email, password);
 
+    const registrationData ={
+    firstName: firstName,
+    lastName: lastName,
+    phoneNumber: phoneNumber,
+    country: country,
+    email: email,
+    password: password
+    }
+
+     await this.registrationPage?.fillupRegistrationForm(registrationData);
+
+});
+
+
+  Then ('Registration details are matched', async function (this: PageObjects) 
+    {
+    const registrationData = await this.registrationPage?.getSubmittedData();
+    await this.registrationPage?.fillupRegistrationForm(registrationData);
+        
+  });  
+    
+
+Then ('Successful registration message is visible',async function (this: PageObjects) {
+    await this.registrationPage?.verifySuccessfulRegistrationMessage()
+});
+
+
+  Then ('Failed registration message is visible', async function (this: PageObjects) {
+    await this.registrationPage?.verifyFailedRegistrationMessage()
 });
 
 

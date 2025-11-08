@@ -10,7 +10,7 @@ Scenario: Verify that all forms and fields requiredare present on the registrati
 #   Given I navigate to the registration page
 #   When I enter existing registration details
 #   And I submit the registration form
-#   Then I should see a successful registration message
+#   Then Failed registration message should be visible
 
   Scenario Outline: Register new user with valid credentials
   Given Im a new user
@@ -18,7 +18,8 @@ Scenario: Verify that all forms and fields requiredare present on the registrati
   And I enter valid registration details with "<firstName>", "<lastName>","<phoneNumber>","<country>", "<email>", "<password>"
   Then I click terms and conditions checkbox
   And I submit the registration form
-  Then Successful registration message is visible
+  Then Successful registration message should be visible
+  Then Registration details are matched
     
 Examples:
     | firstName | lastName | phoneNumber       | country            | email             | password             |
@@ -35,7 +36,8 @@ Scenario Outline: Register new user with invalid credentials
   And I enter invalid registration details with "<firstName>", "<lastName>","<phoneNumber>","<country>", "<email>", "<password>"
   Then I click terms and conditions checkbox
   And I submit the registration form
-  Then Failed registration message is visible
+  Then Failed registration message should be visible
+  Then Registration details are matched
 Examples:
 
     | firstName | lastName | phoneNumber       | country            | email              | password            |

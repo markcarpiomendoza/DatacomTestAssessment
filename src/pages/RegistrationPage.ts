@@ -94,19 +94,19 @@ export class RegistrationPage extends BasePage
     }
 
 
-    async fillupRegistrationForm(
+    async fillupRegistrationForm(registrationData:{
         firstName:string,
         lastName:string,
-        phone:string,
+        phoneNumber:string,
         country:string,
         email:string,
-        password:string):Promise<void>{
-        await this.enterFirstName(firstName);
-        await this.enterLasttName(lastName);
-        await this.enterPhoneNumber(phone);
-        await this.selectCountry(country);
-        await this.enterEmail(email);
-        await this.enterPassword(password);
+        password:string}):Promise<void>{
+        await this.enterFirstName(registrationData.firstName);
+        await this.enterLasttName(registrationData.lastName);
+        await this.enterPhoneNumber(registrationData.phoneNumber);
+        await this.selectCountry(registrationData.country);
+        await this.enterEmail(registrationData.email);
+        await this.enterPassword(registrationData.password);
         await this.checkTermsAndConditions();
     }
 
@@ -116,6 +116,42 @@ export class RegistrationPage extends BasePage
 
     async verifyFailedRegistrationMessage():Promise<void>{
         await expect(this.messageResult).toHaveText('Registration failed')
+    }
+
+    async verifyRegistrationDetailsareCorrect(registrationData:{
+        firstName:string,
+        lastName:string,
+        phoneNumber:string,
+        country:string,
+        email:string,
+        password:string}):Promise<void>{
+        await expect(this.firstNameResult).toHaveText(registrationData.firstName);
+        await expect(this.lastNameResult).toHaveText(registrationData.lastName);
+        await expect(this.phoneResult).toHaveText(registrationData.phoneNumber);
+        await expect(this.countryDropdownResult).toHaveText(registrationData.country);
+        await expect(this.emailResult).toHaveText(registrationData.email);
+    }
+
+    async verifyRegistrationDetailsAreVisible():Promise<void>{
+        await expect(this.firstNameResult).toBeVisible();
+        await expect(this.lastNameResult).toBeVisible();
+        await expect(this.phoneResult).toBeVisible();
+        await expect(this.countryDropdownResult).toBeVisible();
+        await expect(this.emailResult).toBeVisible();
+    }
+
+    async getSubmittedData():Promise<any>{
+
+        const submittedRegistrationData = {
+        firstName:this.firstNameInput,
+        lastName:this.lastNameInput,
+        phoneNumber:this.phoneInput,
+        country:this.countryDropdown,
+        email:this.emailInput,
+        }
+
+        return submittedRegistrationData;
+
     }
 
 }
