@@ -1,8 +1,12 @@
 import{Page,Locator} from '@playwright/test'
 import { BasePage } from './BasePage'
+import { expect } from '@playwright/test';
 export class RegistrationPage extends BasePage
 {
     //ElementLocators
+
+    //url
+    private registrationPageUrl: string='http://qa-practice.netlify.app/bugs-form';
 
     //Fields
     private firstNameInput: Locator=this.page.locator('#firstName');
@@ -22,8 +26,15 @@ export class RegistrationPage extends BasePage
     private emailLabel: Locator=this.page.locator('label[for="exampleInputEmail"]');
     private passwordLabel: Locator=this.page.locator('label[for="exampleInputPassword"]');
 
-    //url
-    private registrationPageUrl: string='http://qa-practice.netlify.app/bugs-form';
+
+    //Results / Messages
+    private messageResult: Locator=this.page.locator('#message');
+    private firstNameResult: Locator=this.page.locator('#resultFn');
+    private lastNameResult: Locator=this.page.locator('#resultLn');
+    private phoneResult: Locator=this.page.locator('#resultPhone');
+    private countryDropdownResult: Locator=this.page.locator('#country');
+    private emailResult: Locator=this.page.locator('#resultEmail');
+
 
     constructor(page: Page)
     {super(page)}
@@ -58,6 +69,53 @@ export class RegistrationPage extends BasePage
     
     async checkTermsAndConditions():Promise<void>{
         await this.termsCheckbox.check();
+    }
+    async clickRegisterButton():Promise<void>{
+        await this.registerButton.click();
+    }
+
+    async verifyAllLabelsAndFieldsAreVisible():Promise<void>{
+        
+        //Labels
+            await expect(this.firstNameLabel).toBeVisible();
+            await expect(this.lastNameLabel).toBeVisible();
+            await expect(this.phoneLabel).toBeVisible();
+            await expect(this.emailLabel).toBeVisible();
+            await expect(this.passwordLabel).toBeVisible();
+        //Fields
+            await expect(this.firstNameInput).toBeVisible();
+            await expect(this.lastNameInput).toBeVisible();
+            await expect(this.phoneInput).toBeVisible();
+            await expect(this.countryDropdown).toBeVisible();
+            await expect(this.emailInput).toBeVisible();
+            await expect(this.passwordInput).toBeVisible();
+            await expect(this.termsCheckbox).toBeVisible();
+
+    }
+
+
+    async fillupRegistrationForm(
+        firstName:string,
+        lastName:string,
+        phone:string,
+        country:string,
+        email:string,
+        password:string):Promise<void>{
+        await this.enterFirstName(firstName);
+        await this.enterLasttName(lastName);
+        await this.enterPhoneNumber(phone);
+        await this.selectCountry(country);
+        await this.enterEmail(email);
+        await this.enterPassword(password);
+        await this.checkTermsAndConditions();
+    }
+
+    async verifySuccessfulRegistrationMessage():Promise<void>{
+        await expect(this.messageResult).toHaveText('Successfully registered the following information')
+    }
+
+    async verifyFailedRegistrationMessage():Promise<void>{
+        await expect(this.messageResult).toHaveText('Registration failed')
     }
 
 }

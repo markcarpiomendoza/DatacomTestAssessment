@@ -1,10 +1,49 @@
 import{ Given,When,Then } from '@cucumber/cucumber';
 import { expect } from '@playwright/test';
 import { PageObjects } from '../support/pageobjectHelper';
+import { RegistrationPage } from '../pages/RegistrationPage';
 
-Given('the user is on the registration page', async function (this: PageObjects) {
+Given('I navigate to the registration page', async function (this: PageObjects) {
     await this.registrationPage?.navigateToRegistrationPage();
 });
+
+Then ('All form fields should be visible and correctly labeled', async function (this: PageObjects) {
+    const registrationPage = this.registrationPage;
+    this.registrationPage?.verifyAllLabelsAndFieldsAreVisible()
+    
+});
+
+Then ('I click terms and conditions checkbox', async function (this: PageObjects) {
+    await this.registrationPage?.checkTermsAndConditions()
+
+});
+
+
+Then ('I submit the registration form', async function (this: PageObjects) {
+await this.registrationPage?.clickRegisterButton()
+
+});
+
+
+Then ('Failed registration message is visible', async function (this: PageObjects) {
+    await this.registrationPage?.verifyFailedRegistrationMessage()
+});
+
+Then ('Successful registration message is visible', async function (this: PageObjects) {
+    await this.registrationPage?.verifySuccessfulRegistrationMessage()
+});
+
+When('I enter valid registration details with {string}, {string}, {string}, {string}, {string}, {string}', 
+async function (this: PageObjects, firstName: string, lastName: string, phoneNumber: string, country: string, email: string, password: string) {
+    await this.registrationPage?.fillupRegistrationForm(firstName, lastName, phoneNumber, country, email, password);
+});
+
+When('I enter invalid registration details with {string}, {string}, {string}, {string}, {string}, {string}', 
+async function (this: PageObjects, firstName: string, lastName: string, phoneNumber: string, country: string, email: string, password: string) {
+     await this.registrationPage?.fillupRegistrationForm(firstName, lastName, phoneNumber, country, email, password);
+
+});
+
 
 When('the user enters first name {string}', async function (this: PageObjects, firstName: string) {
     await this.registrationPage?.enterFirstName(firstName);
@@ -34,32 +73,8 @@ When('the user accepts the terms and conditions', async function (this: PageObje
     await this.registrationPage?.checkTermsAndConditions();
 });
 
-Then('the registration form should be displayed', async function (this: PageObjects) {
-    const isVisible = await this.registrationPage?.isRegistrationFormVisible();
-    expect(isVisible).toBeTruthy();
+When('the user clicks the register button', async function (this: PageObjects) {
+    await this.registrationPage?.clickRegisterButton();
 });
 
-Then('the first name label should be correct', async function (this: PageObjects) {
-    const label = await this.registrationPage?.getFirstNameLabel();
-    expect(label).toBe('First Name');
-});
 
-Then('the last name label should be correct', async function (this: PageObjects) {
-    const label = await this.registrationPage?.getLastNameLabel();
-    expect(label).toBe('Last Name');
-});
-
-Then('the phone label should be correct', async function (this: PageObjects) {
-    const label = await this.registrationPage?.getPhoneLabel();
-    expect(label).toBe('Phone');
-});
-
-Then('the email label should be correct', async function (this: PageObjects) {
-    const label = await this.registrationPage?.getEmailLabel();
-    expect(label).toBe('Email address');
-});
-
-Then('the password label should be correct', async function (this: PageObjects) {
-    const label = await this.registrationPage?.getPasswordLabel();
-    expect(label).toBe('Password');
-});
